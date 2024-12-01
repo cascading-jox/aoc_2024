@@ -2,10 +2,7 @@ use anyhow::Result;
 use std::fs;
 use std::io::{self, BufRead};
 
-pub fn solve_part_one(left: &[i32], right: &[i32]) -> i32 {
-    let mut left_list = left.to_vec();
-    let mut right_list = right.to_vec();
-
+pub fn solve_part_one(mut left_list: Vec<i32>, mut right_list: Vec<i32>) -> i32 {
     left_list.sort();
     right_list.sort();
 
@@ -34,7 +31,7 @@ pub fn part_one() -> Result<String> {
         right_list.push(iter.next().unwrap().parse::<i32>().unwrap());
     }
 
-    Ok(solve_part_one(&left_list, &right_list).to_string())
+    Ok(solve_part_one(left_list, right_list).to_string())
 }
 
 pub fn part_two() -> Result<String> {
@@ -53,7 +50,7 @@ mod tests {
         let left = vec![3, 4, 2, 1, 3, 3];
         let right = vec![4, 3, 5, 3, 9, 3];
 
-        assert_eq!(solve_part_one(&left, &right), 11);
+        assert_eq!(solve_part_one(left, right), 11);
     }
 
     // #[test]
