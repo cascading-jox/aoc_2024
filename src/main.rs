@@ -25,6 +25,13 @@ fn main() -> anyhow::Result<()> {
                 solutions::day01::part_one()?
             }
         }
+        2 => {
+            if cli.part_two {
+                solutions::day02::part_two()?
+            } else {
+                solutions::day02::part_one()?
+            }
+        }
         _ => {
             println!("Day {} not implemented yet!", cli.day);
             return Ok(());
