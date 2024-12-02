@@ -4,11 +4,13 @@ use std::{
     io::{self, BufRead},
 };
 
-pub fn solve_part_one(reports: Vec<Vec<i32>>) -> i32 {
+pub fn solve_part_one(reports: Vec<Vec<i32>>, debug: bool) -> i32 {
     let mut safe_reports = 0;
 
     for report in reports {
-        println!("Report: {:?}", report);
+        if debug {
+            println!("Report: {:?}", report);
+        }
 
         let mut is_increasing = true;
         let mut is_decreasing = true;
@@ -35,11 +37,13 @@ pub fn solve_part_one(reports: Vec<Vec<i32>>) -> i32 {
 
         let is_safe = (is_increasing || is_decreasing) && valid_differences;
 
-        println!("Is increasing: {}", is_increasing);
-        println!("Is decreasing: {}", is_decreasing);
-        println!("Valid differences: {}", valid_differences);
-        println!("Is safe: {}", is_safe);
-        println!("-------------------\n");
+        if debug {
+            println!("Is increasing: {}", is_increasing);
+            println!("Is decreasing: {}", is_decreasing);
+            println!("Valid differences: {}", valid_differences);
+            println!("Is safe: {}", is_safe);
+            println!("-------------------\n");
+        }
 
         if is_safe {
             safe_reports += 1;
@@ -49,7 +53,7 @@ pub fn solve_part_one(reports: Vec<Vec<i32>>) -> i32 {
     safe_reports
 }
 
-pub fn part_one() -> Result<String> {
+pub fn part_one(debug: bool) -> Result<String> {
     let input = std::fs::File::open("input/day02.txt")?;
     let reader = io::BufReader::new(input);
     let mut reports = vec![];
@@ -63,7 +67,7 @@ pub fn part_one() -> Result<String> {
         reports.push(report);
     }
 
-    Ok(solve_part_one(reports).to_string())
+    Ok(solve_part_one(reports, debug).to_string())
 }
 
 pub fn solve_part_two(left_list: Vec<i32>, right_list: Vec<i32>) -> i32 {
@@ -109,7 +113,6 @@ pub fn part_two() -> Result<String> {
     Ok(solve_part_two(left_list, right_list).to_string())
 }
 
-// -------------- Tests ----------------
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -125,7 +128,7 @@ mod tests {
             vec![1, 3, 6, 7, 9],
         ];
 
-        assert_eq!(solve_part_one(reports), 2);
+        assert_eq!(solve_part_one(reports, true), 2); // Enable debug for tests
     }
 
     #[test]

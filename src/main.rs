@@ -11,6 +11,10 @@ struct Cli {
     /// Run part two of the day's puzzle
     #[arg(short, long)]
     part_two: bool,
+
+    /// Enable debug output
+    #[arg(short, long)]
+    debug: bool,
 }
 
 // use anyhow for simplified error handling (one error type instead of many), anyhow! macro,
@@ -29,7 +33,7 @@ fn main() -> anyhow::Result<()> {
             if cli.part_two {
                 solutions::day02::part_two()?
             } else {
-                solutions::day02::part_one()?
+                solutions::day02::part_one(cli.debug)?
             }
         }
         _ => {
