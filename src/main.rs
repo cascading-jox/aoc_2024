@@ -36,6 +36,13 @@ fn main() -> anyhow::Result<()> {
                 solutions::day02::part_one(cli.debug)?
             }
         }
+        3 => {
+            if cli.part_two {
+                solutions::day03::part_two(cli.debug)?
+            } else {
+                solutions::day03::part_one(cli.debug)?
+            }
+        }
         _ => {
             println!("Day {} not implemented yet!", cli.day);
             return Ok(());
