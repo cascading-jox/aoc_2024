@@ -31,7 +31,7 @@ fn main() -> anyhow::Result<()> {
         }
         2 => {
             if cli.part_two {
-                solutions::day02::part_two()?
+                solutions::day02::part_two(cli.debug)?
             } else {
                 solutions::day02::part_one(cli.debug)?
             }
