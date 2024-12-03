@@ -1,8 +1,5 @@
 use anyhow::Result;
-use std::{
-    collections::HashMap,
-    io::{self, BufRead},
-};
+use std::io::{self, BufRead};
 
 pub fn solve_part_one(reports: Vec<Vec<i32>>, debug: bool) -> i32 {
     let mut safe_reports = 0;
@@ -78,50 +75,29 @@ pub fn solve_part_two(reports: Vec<Vec<i32>>, debug: bool) -> i32 {
             println!("Report: {:?}", report);
         }
 
-        let mut is_increasing = true;
-        let mut is_decreasing = true;
-        let mut valid_differences = true;
-        let mut used_dampener = false;
+        // check if original sequence is safe
+        if is_safe_sequence(&report) {
+            safe_reports += 1;
+            continue;
+        }
 
-        for i in 1..report.len() {
-            let diff = report[i] - report[i - 1];
+        // if not, check if removing a level makes the report safe
+        /* 💭
+           Removing a number has the same effect as using a flag but without the extra logic. We can also keep the original checks.
+        */
+        let mut is_safe = false;
+        for i in 0..report.len() {
+            let mut modified_report: Vec<i32> = report.clone();
+            modified_report.remove(i);
 
-            // Check for increasing sequence
-            if report[i] <= report[i - 1] {
-                if !used_dampener {
-                    used_dampener = true;
-                    continue;
-                }
-                is_increasing = false;
-            }
-
-            // Check for decreasing sequence
-            if report[i] >= report[i - 1] {
-                if !used_dampener {
-                    used_dampener = true;
-                    continue;
-                }
-                is_decreasing = false;
-            }
-
-            // Check adjacent differences
-            if diff.abs() < 1 || diff.abs() > 3 {
-                if !used_dampener {
-                    used_dampener = true;
-                    continue;
-                }
-                valid_differences = false;
+            if is_safe_sequence(&modified_report) {
+                is_safe = true;
+                break;
             }
         }
 
-        let is_safe = (is_increasing || is_decreasing) && valid_differences;
-
         if debug {
-            println!("Is increasing: {}", is_increasing);
-            println!("Is decreasing: {}", is_decreasing);
-            println!("Valid differences: {}", valid_differences);
-            println!("Used dampener: {}", used_dampener);
-            println!("Is safe: {}", is_safe);
+            println!("Is safe with dampener: {}", is_safe);
             println!("-------------------\n");
         }
 
@@ -131,6 +107,33 @@ pub fn solve_part_two(reports: Vec<Vec<i32>>, debug: bool) -> i32 {
     }
 
     safe_reports
+}
+
+fn is_safe_sequence(report: &[i32]) -> bool {
+    let mut is_increasing = true;
+    let mut is_decreasing = true;
+    let mut valid_differences = true;
+
+    for i in 1..report.len() {
+        let diff = report[i] - report[i - 1];
+
+        // Check for increasing sequence
+        if report[i] <= report[i - 1] {
+            is_increasing = false;
+        }
+
+        // Check for decreasing sequence
+        if report[i] >= report[i - 1] {
+            is_decreasing = false;
+        }
+
+        // Check adjacent differences
+        if diff.abs() < 1 || diff.abs() > 3 {
+            valid_differences = false;
+        }
+    }
+
+    (is_increasing || is_decreasing) && valid_differences
 }
 
 pub fn part_two(debug: bool) -> Result<String> {
@@ -147,7 +150,7 @@ pub fn part_two(debug: bool) -> Result<String> {
         reports.push(report);
     }
 
-    Ok(solve_part_one(reports, debug).to_string())
+    Ok(solve_part_two(reports, debug).to_string())
 }
 
 #[cfg(test)]
